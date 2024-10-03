@@ -1,6 +1,9 @@
 const db = require("../models");
-const Usuario = db.usuario;
+const Usuario = db.usuarios;
 const Op = db.Sequelize.Op;
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const secretKey = "daw_ii_secret_key";
 
 // Criar um novo usuário
 exports.create = (req, res) => {
@@ -27,6 +30,29 @@ exports.create = (req, res) => {
         message: err.message || "Erro ao criar usuário",
       });
     });
+};
+
+exports.login = (req, res) => {
+  Usuario.findOne({
+    where: {
+      email: req.body.email,
+    },
+  })
+    .then((usuario) => {
+      if (!usuario) {
+        return res.status(404).send({ message: "Usuário não encontrado." });
+      }
+      var passwordIsValid = bcrypt.compareSync(req.body.senha, usuario.senha);
+      if (!passwordIsValid) {
+        return res.status(401).send({
+          accessToken: null,
+          message: "Senha inválida!",
+        });
+      }
+      var token = jwt.sign({ id: usuario.id }, secretKey, { expiresIn: "1h" });
+      res.status(200).send({ usuario: usuario, accessToken: token });
+    })
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 // Buscar todos os usuários
