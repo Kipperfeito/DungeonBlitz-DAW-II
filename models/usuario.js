@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
         usuemail: { type: Sequelize.STRING },
         usudatanascimento: { type: Sequelize.DATEONLY },
         ususenha: { type: Sequelize.STRING },
-        usuadmin: { type: Sequelize.BOOLEAN, defaultValue: 0 },
+        usuadmin: { type: Sequelize.BOOLEAN, defaultValue: false },
         usustatus: { type: Sequelize.STRING }
       },
       { freezeTableName: true }
