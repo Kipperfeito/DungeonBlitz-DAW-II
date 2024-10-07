@@ -1,5 +1,5 @@
 const db = require("../models");
-const Atributos = db.atributos;
+const Atributos = db.atributo;
 const Op = db.Sequelize.Op;
 
 // Criar atributos para um personagem
@@ -11,6 +11,7 @@ exports.create = (req, res) => {
     atrresistencia: req.body.atrresistencia || 10,
     atrsorte: req.body.atrsorte || 10,
     atrdestreza: req.body.atrdestreza || 10,
+    personagemId: req.body.personagemId,
   };
 
   Atributos.create(atributos)

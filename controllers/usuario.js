@@ -1,5 +1,5 @@
 const db = require("../models");
-const Usuario = db.usuarios;
+const Usuario = db.usuario;
 const Op = db.Sequelize.Op;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -18,7 +18,7 @@ exports.create = (req, res) => {
     usunome: req.body.usunome,
     usuemail: req.body.usuemail,
     usudatanascimento: req.body.usudatanascimento,
-    ususenha: req.body.ususenha,
+    ususenha: bcrypt.hashSync(req.body.ususenha, 10),
     usuadmin: req.body.usuadmin || 0,
     usustatus: req.body.usustatus || 'ativo',
   };
@@ -35,14 +35,14 @@ exports.create = (req, res) => {
 exports.login = (req, res) => {
   Usuario.findOne({
     where: {
-      email: req.body.email,
+      usuemail: req.body.usuemail,
     },
   })
     .then((usuario) => {
       if (!usuario) {
         return res.status(404).send({ message: "Usuário não encontrado." });
       }
-      var passwordIsValid = bcrypt.compareSync(req.body.senha, usuario.senha);
+      var passwordIsValid = bcrypt.compareSync(req.body.ususenha, usuario.ususenha);
       if (!passwordIsValid) {
         return res.status(401).send({
           accessToken: null,
@@ -71,21 +71,21 @@ exports.findAll = (req, res) => {
 
 // Buscar um único usuário por email
 exports.findOne = (req, res) => {
-  const email = req.params.email;
+  const id = req.params.id;
 
-  Usuario.findOne({ where: { usuemail: email } })
+  Usuario.findOne({ where: { id: id } })
     .then((data) => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Não foi possível encontrar usuário com email ${email}`,
+          message: `Não foi possível encontrar usuário com id ${id}`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || `Erro ao buscar usuário com email ${email}`,
+        message: err.message || `Erro ao buscar usuário com id ${id}`,
       });
     });
 };

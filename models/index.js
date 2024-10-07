@@ -17,6 +17,7 @@ db.personagem = require("./personagem.js")(sequelize, Sequelize);
 db.atributo = require("./atributo.js")(sequelize, Sequelize);
 db.usuario = require("./usuario.js")(sequelize, Sequelize);
 
+
 //Relacionamento 1:1 entre Usuario e Loja
 db.personagem.hasOne(db.atributo);
 db.atributo.belongsTo(db.personagem);

@@ -2,6 +2,7 @@ module.exports = (app) => {
     const usuario = require("../controllers/usuario.js");
     var router = require("express").Router();
   
+    router.post("/login", usuario.login);
     // Rota para criar um usuário
     router.post("/", usuario.create);
     // Rota que retorna todos os usuários
