@@ -18,6 +18,7 @@ exports.create = (req, res) => {
     perexperiencia: req.body.perexperiencia || 0,
     perpontosvida: req.body.perpontosvida || 100,
     permana: req.body.permana || 50,
+    usuarioId: req.body.usuarioId
   };
 
   Personagem.create(personagem)
