@@ -20,44 +20,46 @@ module.exports = (app) => {
   });
 
   // Rota para upload de imagem do personagem
-  router.post("/upload/", upload.single("file"), async (req, res) => {
-    res.send({
-      upload: true,
-      file: req.file,
-    });
+  router.post("/", upload.single("perimagem"), async (req, res) => {
+    try {
+      const novoPersonagem = {
+        ...req.body,
+        perimagem: req.file ? req.file.filename : null,
+      };
+
+      const resultado = await personagem.create(novoPersonagem);
+      res.status(201).send(resultado);
+    } catch (err) {
+      console.error("Erro ao criar personagem:", err);
+      res.status(500).send({
+        message: "Erro ao criar personagem",
+      });
+    }
   });
 
   // Rota para buscar imagem do personagem
   router.get("/upload/:arquivo", (req, res) => {
-    const arquivo =
-      path.dirname(__dirname) + `/uploads/personagem/${req.params.arquivo}`;
-    console.log("dir: " + arquivo);
-    fs.readFile(arquivo, function (err, data) {
+    const arquivo = path.join(
+      __dirname,
+      "../uploads/personagem",
+      req.params.arquivo
+    );
+
+    fs.readFile(arquivo, (err, data) => {
       if (err) {
         return res.status(404).send({ message: "Arquivo não encontrado" });
       }
-      res.contentType("png");
+      res.contentType(path.extname(arquivo));
       res.send(data);
     });
   });
 
-  // Criar um novo personagem
-  router.post("/", personagem.create);
-
-  // Buscar todos os personagem
+  // Outras rotas
   router.get("/", personagem.findAll);
-
-  // Buscar um único personagem por ID
   router.get("/:id", personagem.findOne);
-
-  // Atualizar um personagem por ID
   router.put("/:id", personagem.update);
-
-  // Deletar um personagem por ID
   router.delete("/:id", personagem.delete);
-
-  // Deletar todos os personagem
   router.delete("/", personagem.deleteAll);
 
   app.use("/personagens", router);
-};
+};  

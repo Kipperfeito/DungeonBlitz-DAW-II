@@ -14,7 +14,7 @@ exports.create = (req, res) => {
   const personagem = {
     pernome: req.body.pernome,
     perclasse: req.body.perclasse,
-    perimagem: req.body.perimagem,
+    perimagem: req.body.perimagem || "default.png",
     perexperiencia: req.body.perexperiencia || 0,
     perpontosvida: req.body.perpontosvida || 100,
     permana: req.body.permana || 50,
