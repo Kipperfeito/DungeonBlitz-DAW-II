@@ -4,7 +4,7 @@ const Op = db.Sequelize.Op;
 
 // Criar um novo personagem
 exports.create = (req, res) => {
-  if (!req.body.pernome || !req.body.perclasse) {
+  if (!req.pernome || !req.perclasse) {
     res.status(400).send({
       message: "Nome e classe são obrigatórios",
     });
@@ -12,13 +12,13 @@ exports.create = (req, res) => {
   }
 
   const personagem = {
-    pernome: req.body.pernome,
-    perclasse: req.body.perclasse,
-    perimagem: req.body.perimagem || "default.png",
-    perexperiencia: req.body.perexperiencia || 0,
-    perpontosvida: req.body.perpontosvida || 100,
-    permana: req.body.permana || 50,
-    usuarioId: req.body.usuarioId
+    pernome: req.pernome,
+    perclasse: req.perclasse,
+    perimagem: req.perimagem,
+    perexperiencia: req.perexperiencia || 0,
+    perpontosvida: req.perpontosvida || 100,
+    permana: req.permana || 50,
+    usuarioId: req.usuarioId
   };
 
   Personagem.create(personagem)
@@ -67,9 +67,9 @@ exports.findOne = (req, res) => {
 
 // Atualizar um personagem por ID
 exports.update = (req, res) => {
-  const id = req.params.id;
+  const id = req.id;
 
-  Personagem.update(req.body, {
+  Personagem.update(req.novoPersonagem, {
     where: { id: id },
   })
     .then((num) => {

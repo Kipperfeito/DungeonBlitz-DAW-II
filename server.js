@@ -6,7 +6,7 @@ const app = express();
 
 var corsOptions = {
   origin:
-    "Aqui informamos quais urls permitimos que sejam conectadas ao nosso backend. Quando tivermos um frontend, iremos alterar para a url do nosso frontend",
+    "http://localhost:3000",
 };
 
 app.use(cors(corsOptions));

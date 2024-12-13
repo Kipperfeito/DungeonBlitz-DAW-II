@@ -27,8 +27,7 @@ module.exports = (app) => {
         perimagem: req.file ? req.file.filename : null,
       };
 
-      const resultado = await personagem.create(novoPersonagem);
-      res.status(201).send(resultado);
+      const resultado = await personagem.create(novoPersonagem, res);
     } catch (err) {
       console.error("Erro ao criar personagem:", err);
       res.status(500).send({
@@ -57,7 +56,21 @@ module.exports = (app) => {
   // Outras rotas
   router.get("/", personagem.findAll);
   router.get("/:id", personagem.findOne);
-  router.put("/:id", personagem.update);
+  router.put("/:id", upload.single("perimagem"), async (req, res) => {
+    try {
+      const novoPersonagem = {
+        ...req.body,
+        perimagem: req.file ? req.file.filename : null,
+      };
+
+      await personagem.update({novoPersonagem, id:req.params.id}, res);
+    } catch (err) {
+      console.error("Erro ao criar personagem:", err);
+      res.status(500).send({
+        message: "Erro ao criar personagem",
+      });
+    }
+  });
   router.delete("/:id", personagem.delete);
   router.delete("/", personagem.deleteAll);
 
